@@ -1,3 +1,8 @@
-const log = require('./log');
+import  { log } from './log';
+import $ from 'jquery';
 
-log('Jean');
+$('body').css('backgroundColor', '#FFF');
+
+let a = "Salut les gens";
+
+log('a');

@@ -4,6 +4,7 @@
   "description": "My webpack project",
   "main": "app.js",
   "scripts": {
+    "dev": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,6 +17,12 @@
     "url": "https://github.com/fabriceLatri/DemoWebpack/issues"
   },
   "devDependencies": {
+    "babel-core": "6.25",
+    "babel-loader": "^7.1.1",
+    "babel-preset-env": "^1.6.0",
     "webpack": "^3.4.1"
+  },
+  "dependencies": {
+    "jquery": "^3.5.1"
   }
 }
