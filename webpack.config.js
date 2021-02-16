@@ -1,14 +1,19 @@
 const path = require('path');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const dev = process.env.NODE_ENV === 'dev';
 
-module.exports = {
+let config = {
   entry: './assets/js/app.js',
   
   output: {
     path: path.resolve('dist'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    publicPath: '/dist/'
   },
   
-  watch: true,
+  watch: dev,
+
+  devtool: dev ? 'cheap-module-eval-source-map' : 'source-map',
 
   module: {
     rules: [
@@ -18,5 +23,15 @@ module.exports = {
         use: ['babel-loader']
       }
     ]
-  }
+  },
+
+  plugins: [
+    
+  ]
 }
+
+if (!dev) config.plugins.push(new UglifyJSPlugin({
+  sourceMap: true
+}));
+
+module.exports = config;

@@ -74,3 +74,6 @@ typings/
 
 # IDE files
 .idea
+
+# dist Folder
+dist
