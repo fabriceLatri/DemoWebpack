@@ -1,10 +1,10 @@
 const path = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const dev = process.env.NODE_ENV === 'dev';
 
 let cssLoaders = [
-  'style-loader', 
-  { loader: 'css-loader', options: { importLoaders: 1 } }
+  { loader: 'css-loader', options: { importLoaders: 1, minimize: !dev } }
 ]
 
 if (!dev) {
@@ -24,17 +24,19 @@ if (!dev) {
 
 
 let config = {
-  entry: './assets/js/app.js',
+  entry: {
+    app: './assets/js/app.js'
+  },
   
   output: {
     path: path.resolve('dist'),
-    filename: 'bundle.js',
+    filename: '[name].js',
     publicPath: '/dist/'
   },
   
   watch: dev,
 
-  devtool: dev ? 'cheap-module-eval-source-map' : 'source-map',
+  devtool: dev ? 'cheap-module-eval-source-map' : false,
 
   module: {
     rules: [
@@ -45,22 +47,31 @@ let config = {
       },
       {
         test: /\.css$/,
-        use: cssLoaders
+        use: ExtractTextPlugin.extract({
+          fallback: "style-loader",
+          use: cssLoaders
+        })
       },
       {
         test: /\.scss$/,
-        use: [...cssLoaders, 'sass-loader']
+        use: ExtractTextPlugin.extract({
+              fallback: "style-loader",
+              use: [...cssLoaders, 'sass-loader']
+            })
       }
     ]
   },
 
   plugins: [
-    
+    new ExtractTextPlugin({
+      filename: '[name].css',
+      disable: dev
+    })
   ]
 }
 
 if (!dev) config.plugins.push(new UglifyJSPlugin({
-  sourceMap: true
+  sourceMap: false
 }));
 
 module.exports = config;
