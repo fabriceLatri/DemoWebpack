@@ -1,6 +1,8 @@
 const path = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const ManifestPlugin = require("webpack-manifest-plugin");
 const dev = process.env.NODE_ENV === 'dev';
 
 let cssLoaders = [
@@ -25,12 +27,12 @@ if (!dev) {
 
 let config = {
   entry: {
-    app: './assets/js/app.js'
+    app: ['./assets/css/app.scss', './assets/js/app.js']
   },
   
   output: {
     path: path.resolve('dist'),
-    filename: '[name].js',
+    filename: dev ? '[name].js' : '[name].[chunkhash:8].js',
     publicPath: '/dist/'
   },
   
@@ -64,14 +66,22 @@ let config = {
 
   plugins: [
     new ExtractTextPlugin({
-      filename: '[name].css',
+      filename: dev ? '[name].css' : '[name].[contenthash:8].css',
       disable: dev
     })
   ]
 }
 
-if (!dev) config.plugins.push(new UglifyJSPlugin({
-  sourceMap: false
-}));
+if (!dev) {
+  config.plugins.push(new UglifyJSPlugin({
+    sourceMap: false
+  }));
+  config.plugins.push(new ManifestPlugin());
+  config.plugins.push(new CleanWebpackPlugin(['dist'], {
+    root: path.resolve('./'),
+    verbose: true,
+    dry: false
+  }))
+}
 
 module.exports = config;
