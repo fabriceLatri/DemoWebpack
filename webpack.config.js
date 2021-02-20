@@ -35,6 +35,12 @@ let config = {
     filename: dev ? '[name].js' : '[name].[chunkhash:8].js',
     publicPath: '/dist/'
   },
+  resolve: {
+    alias: {
+      '@css': path.resolve('./assets/css/'),
+      '@': path.resolve('./assets/js/')
+    }
+  },
   
   watch: dev,
 
@@ -60,7 +66,29 @@ let config = {
               fallback: "style-loader",
               use: [...cssLoaders, 'sass-loader']
             })
-      }
+      },
+      {
+        test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+        loader: 'file-loader'
+      },
+      {
+        test: /\.(png|jpg|gif|svg)$/i,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8192,
+              name: "[name].[hash:7].[ext]",
+            },
+          },
+          {
+            loader: 'img-loader',
+            options: {
+              enabled: !dev
+            }
+          }
+        ],
+      },
     ]
   },
 
