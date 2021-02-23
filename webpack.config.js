@@ -1,8 +1,8 @@
 const path = require('path');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const ManifestPlugin = require("webpack-manifest-plugin");
+const ManifestPlugin = require('webpack-manifest-plugin');
 const dev = process.env.NODE_ENV === 'dev';
 
 let cssLoaders = [
@@ -49,6 +49,12 @@ let config = {
   module: {
     rules: [
       {
+        enforce: 'pre',
+        test: /\.m?js$/,
+        exclude: /node_modules/,
+        use: ['eslint-loader']
+      },
+      {
         test: /\.m?js$/,
         exclude: /node_modules/,
         use: ['babel-loader']
@@ -56,14 +62,14 @@ let config = {
       {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
-          fallback: "style-loader",
+          fallback: 'style-loader',
           use: cssLoaders
         })
       },
       {
         test: /\.scss$/,
         use: ExtractTextPlugin.extract({
-              fallback: "style-loader",
+              fallback: 'style-loader',
               use: [...cssLoaders, 'sass-loader']
             })
       },
@@ -78,8 +84,8 @@ let config = {
             loader: 'url-loader',
             options: {
               limit: 8192,
-              name: "[name].[hash:7].[ext]",
-            },
+              name: '[name].[hash:7].[ext]'
+            }
           },
           {
             loader: 'img-loader',
@@ -112,4 +118,4 @@ if (!dev) {
   }))
 }
 
-module.exports = config;
+module.exports = config
