@@ -69,9 +69,9 @@ let config = {
       {
         test: /\.scss$/,
         use: ExtractTextPlugin.extract({
-              fallback: 'style-loader',
-              use: [...cssLoaders, 'sass-loader']
-            })
+          fallback: 'style-loader',
+          use: [...cssLoaders, 'sass-loader']
+        })
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
