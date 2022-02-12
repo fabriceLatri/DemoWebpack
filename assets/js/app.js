@@ -1,3 +1,3 @@
-import knot from '@css/knot.jpg'
+import knot from '@css/knot.jpg';
 
-console.log(knot)
+console.log(knot);

@@ -1,3 +1,3 @@
 export const log = function (value) {
-  console.log(value)
-}
+  console.log(value);
+};

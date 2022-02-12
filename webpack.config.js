@@ -6,42 +6,39 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 const dev = process.env.NODE_ENV === 'dev';
 
 let cssLoaders = [
-  { loader: 'css-loader', options: { importLoaders: 1, minimize: !dev } }
-]
+  { loader: 'css-loader', options: { importLoaders: 1, minimize: !dev } },
+];
 
 if (!dev) {
-  cssLoaders.push(
-    { loader: 'postcss-loader',
-      options: {
-        plugins: () => [
-          require('autoprefixer')({
-            browsers: ['last 2 versions', 'ie > 8']
-          })
-        ]
-      }
-    }
-  )
+  cssLoaders.push({
+    loader: 'postcss-loader',
+    options: {
+      plugins: () => [
+        require('autoprefixer')({
+          browsers: ['last 2 versions', 'ie > 8'],
+        }),
+      ],
+    },
+  });
 }
-  
-
 
 let config = {
   entry: {
-    app: ['./assets/css/app.scss', './assets/js/app.js']
+    app: ['./assets/css/app.scss', './assets/js/app.js'],
   },
-  
+
   output: {
     path: path.resolve('dist'),
     filename: dev ? '[name].js' : '[name].[chunkhash:8].js',
-    publicPath: '/dist/'
+    publicPath: '/dist/',
   },
   resolve: {
     alias: {
       '@css': path.resolve('./assets/css/'),
-      '@': path.resolve('./assets/js/')
-    }
+      '@': path.resolve('./assets/js/'),
+    },
   },
-  
+
   watch: dev,
 
   devtool: dev ? 'cheap-module-eval-source-map' : false,
@@ -52,30 +49,30 @@ let config = {
         enforce: 'pre',
         test: /\.m?js$/,
         exclude: /node_modules/,
-        use: ['eslint-loader']
+        use: ['eslint-loader'],
       },
       {
         test: /\.m?js$/,
         exclude: /node_modules/,
-        use: ['babel-loader']
+        use: ['babel-loader'],
       },
       {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: cssLoaders
-        })
+          use: cssLoaders,
+        }),
       },
       {
         test: /\.scss$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: [...cssLoaders, 'sass-loader']
-        })
+          use: [...cssLoaders, 'sass-loader'],
+        }),
       },
       {
         test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-        loader: 'file-loader'
+        loader: 'file-loader',
       },
       {
         test: /\.(png|jpg|gif|svg)$/i,
@@ -84,38 +81,42 @@ let config = {
             loader: 'url-loader',
             options: {
               limit: 8192,
-              name: '[name].[hash:7].[ext]'
-            }
+              name: '[name].[hash:7].[ext]',
+            },
           },
           {
             loader: 'img-loader',
             options: {
-              enabled: !dev
-            }
-          }
+              enabled: !dev,
+            },
+          },
         ],
       },
-    ]
+    ],
   },
 
   plugins: [
     new ExtractTextPlugin({
       filename: dev ? '[name].css' : '[name].[contenthash:8].css',
-      disable: dev
-    })
-  ]
-}
+      disable: dev,
+    }),
+  ],
+};
 
 if (!dev) {
-  config.plugins.push(new UglifyJSPlugin({
-    sourceMap: false
-  }));
+  config.plugins.push(
+    new UglifyJSPlugin({
+      sourceMap: false,
+    })
+  );
   config.plugins.push(new ManifestPlugin());
-  config.plugins.push(new CleanWebpackPlugin(['dist'], {
-    root: path.resolve('./'),
-    verbose: true,
-    dry: false
-  }))
+  config.plugins.push(
+    new CleanWebpackPlugin(['dist'], {
+      root: path.resolve('./'),
+      verbose: true,
+      dry: false,
+    })
+  );
 }
 
-module.exports = config
+module.exports = config;
